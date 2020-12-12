@@ -299,7 +299,7 @@ if (isRegularMode && isTwoTeamPug) {
 
       template.print(
         langarEffFNT,
-        86,
+        66,
         y + 37,
         {
           text: `${eff}%`,
@@ -312,7 +312,7 @@ if (isRegularMode && isTwoTeamPug) {
 
       template.print(
         langarDeathsFNT,
-        186,
+        166,
         y + 37,
         {
           text: deaths.toFixed(0),
@@ -469,7 +469,7 @@ if (isRegularMode && isTwoTeamPug) {
 
       template.print(
         langarEffFNT,
-        736,
+        716,
         y + 37,
         {
           text: `${eff}%`,
@@ -482,7 +482,7 @@ if (isRegularMode && isTwoTeamPug) {
 
       template.print(
         langarDeathsFNT,
-        836,
+        816,
         y + 37,
         {
           text: deaths.toFixed(0),
