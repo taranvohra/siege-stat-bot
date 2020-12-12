@@ -64,7 +64,14 @@ if (isRegularMode && isTwoTeamPug) {
   const gameMode = info.teams[0].length === 5 ? '5v5' : '6v6';
   Jimp.read(`../assets/${gameMode}.png`).then(async (template) => {
     let y, nextY;
-    const [redTeam, blueTeam] = info.teams;
+    const { cores, map, teams, timeLeft } = info;
+    const timeLeftSeconds = Number(timeLeft.replace(rgx, '').trim());
+    const formattedTimeLeft = new Date(timeLeftSeconds * 1000)
+      .toISOString()
+      .substr(11, 8);
+    const redCoreHealth = Number(cores[0].replace(rgx, '').trim()).toFixed(0);
+    const blueCoreHealth = Number(cores[1].replace(rgx, '').trim()).toFixed(0);
+    const [redTeam, blueTeam] = teams;
     const {
       redMainFNT,
       blueMainFNT,
@@ -77,11 +84,75 @@ if (isRegularMode && isTwoTeamPug) {
       langarNukesKilledFNT,
       fragsBlueFNT,
       fragsRedFNT,
-      langarWhiteFNT,
+      langarOrangeFNT,
     } = await FONTS;
 
-    y = nextY = 120;
+    template.print(
+      langarOrangeFNT,
+      580,
+      5,
+      {
+        text: map.replace(rgx, '').trim(),
+        alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT,
+        alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE,
+      },
+      250,
+      10
+    );
 
+    template.print(
+      langarOrangeFNT,
+      580,
+      20,
+      {
+        text: 'Siege',
+        alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT,
+        alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE,
+      },
+      250,
+      10
+    );
+
+    template.print(
+      langarOrangeFNT,
+      580,
+      36,
+      {
+        text: formattedTimeLeft,
+        alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT,
+        alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE,
+      },
+      250,
+      10
+    );
+
+    template.print(
+      redMainFNT,
+      215,
+      77,
+      {
+        text: redCoreHealth,
+        alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT,
+        alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE,
+      },
+      250,
+      50
+    );
+
+    template.print(
+      blueMainFNT,
+      875,
+      77,
+      {
+        text: blueCoreHealth,
+        alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT,
+        alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE,
+      },
+      250,
+      50
+    );
+
+    y = nextY = 120;
     for (let i = 0; i < redTeam.length; i++) {
       y = nextY;
       nextY += 50;

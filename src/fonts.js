@@ -19,7 +19,7 @@ const FONTS = (async () => {
   const langarDeathsFNT = await Jimp.loadFont('../assets/langar-deaths.fnt');
   const fragsRedFNT = await Jimp.loadFont('../assets/frags-red.fnt');
   const fragsBlueFNT = await Jimp.loadFont('../assets/frags-blue.fnt');
-  const langarWhiteFNT = await Jimp.loadFont('../assets/langar-white.fnt');
+  const langarOrangeFNT = await Jimp.loadFont('../assets/langar-orange.fnt');
 
   return {
     redMainFNT,
@@ -34,7 +34,7 @@ const FONTS = (async () => {
     langarDeathsFNT,
     fragsRedFNT,
     fragsBlueFNT,
-    langarWhiteFNT,
+    langarOrangeFNT,
   };
 })();
 
