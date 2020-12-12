@@ -4,11 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/index.js"
   },
   "author": "taranvohra",
   "license": "ISC",
   "dependencies": {
+    "discord.js": "^12.5.1",
+    "dotenv": "^8.2.0",
     "jimp": "^0.16.1"
   }
 }
