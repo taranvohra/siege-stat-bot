@@ -3,7 +3,8 @@ const Jimp = require('jimp');
 const FONTS = (async () => {
   const redMainFNT = await Jimp.loadFont('../assets/main_red.fnt');
   const blueMainFNT = await Jimp.loadFont('../assets/main_blue.fnt');
-  const langarFNT = await Jimp.loadFont('../assets/langar.fnt');
+  const redMainLgFNT = await Jimp.loadFont('../assets/main_red-lg.fnt');
+  const blueMainLgFNT = await Jimp.loadFont('../assets/main_blue-lg.fnt');
   const langarNukesFNT = await Jimp.loadFont('../assets/langar-nukes.fnt');
   const langarNukesFailedFNT = await Jimp.loadFont(
     '../assets/langar-nukes-failed.fnt'
@@ -24,7 +25,8 @@ const FONTS = (async () => {
   return {
     redMainFNT,
     blueMainFNT,
-    langarFNT,
+    redMainLgFNT,
+    blueMainLgFNT,
     langarNukesFNT,
     langarNukesFailedFNT,
     langarNukesKilledFNT,

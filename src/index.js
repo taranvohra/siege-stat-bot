@@ -75,6 +75,8 @@ if (isRegularMode && isTwoTeamPug) {
     const {
       redMainFNT,
       blueMainFNT,
+      redMainLgFNT,
+      blueMainLgFNT,
       langarBuildsFNT,
       langarDeathsFNT,
       langarEffFNT,
@@ -92,7 +94,7 @@ if (isRegularMode && isTwoTeamPug) {
       580,
       5,
       {
-        text: map.replace(rgx, '').trim(),
+        text: map.replace(rgx, '').trim().replace('CTF-', ''),
         alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT,
         alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE,
       },
@@ -118,7 +120,7 @@ if (isRegularMode && isTwoTeamPug) {
       580,
       36,
       {
-        text: formattedTimeLeft,
+        text: `${formattedTimeLeft}, on ${new Date().toDateString().slice(4)}`,
         alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT,
         alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE,
       },
@@ -127,9 +129,9 @@ if (isRegularMode && isTwoTeamPug) {
     );
 
     template.print(
-      redMainFNT,
+      redMainLgFNT,
       215,
-      77,
+      74,
       {
         text: redCoreHealth,
         alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT,
@@ -140,9 +142,9 @@ if (isRegularMode && isTwoTeamPug) {
     );
 
     template.print(
-      blueMainFNT,
+      blueMainLgFNT,
       875,
-      77,
+      74,
       {
         text: blueCoreHealth,
         alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT,
@@ -158,6 +160,7 @@ if (isRegularMode && isTwoTeamPug) {
       nextY += 50;
       const player = redTeam[i];
       const name = player.name.replace(rgx, '').trim().substring(0, 20);
+      const country = player.country.replace(rgx, '').trim();
       const nukes = player.nukes.replace(rgx, '').trim();
       const nukeFails = player.nukeFails.replace(rgx, '').trim();
       const nukeKills = player.nukeKills.replace(rgx, '').trim();
@@ -289,6 +292,11 @@ if (isRegularMode && isTwoTeamPug) {
         50
       );
 
+      if (country.length > 0) {
+        const flag = await Jimp.read(`../assets/flags/${country}.png`);
+        template.composite(flag, 10, y + 36);
+      }
+
       template.print(
         langarEffFNT,
         86,
@@ -322,6 +330,7 @@ if (isRegularMode && isTwoTeamPug) {
       nextY += 50;
       const player = blueTeam[i];
       const name = player.name.replace(rgx, '').trim().substring(0, 20);
+      const country = player.country.replace(rgx, '').trim();
       const nukes = player.nukes.replace(rgx, '').trim();
       const nukeFails = player.nukeFails.replace(rgx, '').trim();
       const nukeKills = player.nukeKills.replace(rgx, '').trim();
@@ -452,6 +461,11 @@ if (isRegularMode && isTwoTeamPug) {
         50,
         50
       );
+
+      if (country.length > 0) {
+        const flag = await Jimp.read(`../assets/flags/${country}.png`);
+        template.composite(flag, 660, y + 36);
+      }
 
       template.print(
         langarEffFNT,
