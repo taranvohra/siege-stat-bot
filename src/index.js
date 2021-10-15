@@ -48,7 +48,8 @@ async function generateStats() {
           country,
         ] = curr.split('\t');
         if (team) {
-          acc.teams[Number(team.replace(rgx, ''))].push({
+          const teamPlayers = acc.teams[Number(team.replace(rgx, ''))];
+          teamPlayers.push({
             name,
             team,
             score,
@@ -62,6 +63,7 @@ async function generateStats() {
             builds,
             country,
           });
+          teamPlayers.sort((a, b) => b.score - a.score);
         }
       }
       return acc;
