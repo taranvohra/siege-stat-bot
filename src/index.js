@@ -1,12 +1,12 @@
-const fs = require('fs');
-const Jimp = require('jimp');
-const FONTS = require('./fonts');
-const Discord = require('discord.js');
+const fs = require("fs");
+const Jimp = require("jimp");
+const FONTS = require("./fonts");
+const Discord = require("discord.js");
 const client = new Discord.Client();
-require('dotenv').config();
+require("dotenv").config();
 
 client.login(process.env.DISCORD_TOKEN);
-client.on('ready', () => {
+client.on("ready", () => {
   console.log(`Stats Bot started running at ${new Date().toUTCString()}`);
 
   setInterval(() => {
@@ -16,13 +16,13 @@ client.on('ready', () => {
 
 async function generateStats() {
   const rgx = /\x00/g;
-  const LOG_FILE = '../Pugs/siege_game_summary.log';
+  const LOG_FILE = "../Pugs/siege_game_summary.log";
 
-  const pugsDir = fs.readdirSync('../Pugs');
-  const hasStatsAvailable = pugsDir.some((f) => f === 'siege_game_summary.log');
+  const pugsDir = fs.readdirSync("../Pugs");
+  const hasStatsAvailable = pugsDir.some((f) => f === "siege_game_summary.log");
   if (!hasStatsAvailable) return;
 
-  const rows = fs.readFileSync(LOG_FILE, 'utf-8').split('\r');
+  const rows = fs.readFileSync(LOG_FILE, "utf-8").split("\r");
   const info = rows.reduce(
     (acc, curr, i) => {
       if (i === 0) acc.mode = curr;
@@ -46,9 +46,9 @@ async function generateStats() {
           mineFrags,
           builds,
           country,
-        ] = curr.split('\t');
+        ] = curr.split("\t");
         if (team) {
-          const teamPlayers = acc.teams[Number(team.replace(rgx, ''))];
+          const teamPlayers = acc.teams[Number(team.replace(rgx, ""))];
           teamPlayers.push({
             name,
             team,
@@ -63,34 +63,39 @@ async function generateStats() {
             builds,
             country,
           });
-          teamPlayers.sort((a, b) => b.score - a.score);
+
+          teamPlayers.sort((a, b) => {
+            const bScore = Number(b.score.replace(rgx, "").trim());
+            const aScore = Number(a.score.replace(rgx, "").trim());
+            return bScore - aScore;
+          });
         }
       }
       return acc;
     },
     {
-      mode: '',
-      map: '',
+      mode: "",
+      map: "",
       timeLeft: null,
       cores: [],
       teams: [[], [], [], []],
     }
   );
 
-  const isRegularMode = info.mode.replace(rgx, '').trim().includes('Regular');
+  const isRegularMode = info.mode.replace(rgx, "").trim().includes("Regular");
   const isTwoTeamPug = info.teams[2].length === 0 && info.teams[3].length === 0;
 
   if (isRegularMode && isTwoTeamPug) {
-    const gameMode = info.teams[0].length === 5 ? '5v5' : '6v6';
+    const gameMode = info.teams[0].length === 5 ? "5v5" : "6v6";
     Jimp.read(`assets/${gameMode}.png`).then(async (template) => {
       let y, nextY;
       const { cores, map, teams, timeLeft } = info;
-      const timeLeftSeconds = Number(timeLeft.replace(rgx, '').trim());
+      const timeLeftSeconds = Number(timeLeft.replace(rgx, "").trim());
       const formattedTimeLeft = new Date(timeLeftSeconds * 1000)
         .toISOString()
         .substr(11, 8);
-      const redCoreHealth = Number(cores[0].replace(rgx, '').trim()).toFixed(0);
-      const blueCoreHealth = Number(cores[1].replace(rgx, '').trim()).toFixed(
+      const redCoreHealth = Number(cores[0].replace(rgx, "").trim()).toFixed(0);
+      const blueCoreHealth = Number(cores[1].replace(rgx, "").trim()).toFixed(
         0
       );
       const [redTeam, blueTeam] = teams;
@@ -116,7 +121,7 @@ async function generateStats() {
         580,
         5,
         {
-          text: map.replace(rgx, '').trim().replace('CTF-', ''),
+          text: map.replace(rgx, "").trim().replace("CTF-", ""),
           alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT,
           alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE,
         },
@@ -129,7 +134,7 @@ async function generateStats() {
         580,
         20,
         {
-          text: 'Siege',
+          text: "Siege",
           alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT,
           alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE,
         },
@@ -183,20 +188,20 @@ async function generateStats() {
         y = nextY;
         nextY += 50;
         const player = redTeam[i];
-        const name = player.name.replace(rgx, '').trim().substring(0, 20);
-        const country = player.country.replace(rgx, '').trim();
-        const nukes = player.nukes.replace(rgx, '').trim();
-        const nukeFails = player.nukeFails.replace(rgx, '').trim();
-        const nukeKills = player.nukeKills.replace(rgx, '').trim();
-        const coreDamage = player.coreDamage.replace(rgx, '').trim();
-        const mineFrags = player.mineFrags.replace(rgx, '').trim();
-        const builds = player.builds.replace(rgx, '').trim();
-        const kills = Number(player.kills.replace(rgx, '').trim());
-        const deaths = Number(player.deaths.replace(rgx, '').trim());
-        const score = player.score.replace(rgx, '').trim();
+        const name = player.name.replace(rgx, "").trim().substring(0, 20);
+        const country = player.country.replace(rgx, "").trim();
+        const nukes = player.nukes.replace(rgx, "").trim();
+        const nukeFails = player.nukeFails.replace(rgx, "").trim();
+        const nukeKills = player.nukeKills.replace(rgx, "").trim();
+        const coreDamage = player.coreDamage.replace(rgx, "").trim();
+        const mineFrags = player.mineFrags.replace(rgx, "").trim();
+        const builds = player.builds.replace(rgx, "").trim();
+        const kills = Number(player.kills.replace(rgx, "").trim());
+        const deaths = Number(player.deaths.replace(rgx, "").trim());
+        const score = player.score.replace(rgx, "").trim();
         const eff =
           kills === 0 && deaths === 0
-            ? '0'
+            ? "0"
             : ((kills / (kills + deaths)) * 100).toFixed(0);
 
         template.print(
@@ -353,20 +358,20 @@ async function generateStats() {
         y = nextY;
         nextY += 50;
         const player = blueTeam[i];
-        const name = player.name.replace(rgx, '').trim().substring(0, 20);
-        const country = player.country.replace(rgx, '').trim();
-        const nukes = player.nukes.replace(rgx, '').trim();
-        const nukeFails = player.nukeFails.replace(rgx, '').trim();
-        const nukeKills = player.nukeKills.replace(rgx, '').trim();
-        const coreDamage = player.coreDamage.replace(rgx, '').trim();
-        const mineFrags = player.mineFrags.replace(rgx, '').trim();
-        const builds = player.builds.replace(rgx, '').trim();
-        const kills = Number(player.kills.replace(rgx, '').trim());
-        const deaths = Number(player.deaths.replace(rgx, '').trim());
-        const score = player.score.replace(rgx, '').trim();
+        const name = player.name.replace(rgx, "").trim().substring(0, 20);
+        const country = player.country.replace(rgx, "").trim();
+        const nukes = player.nukes.replace(rgx, "").trim();
+        const nukeFails = player.nukeFails.replace(rgx, "").trim();
+        const nukeKills = player.nukeKills.replace(rgx, "").trim();
+        const coreDamage = player.coreDamage.replace(rgx, "").trim();
+        const mineFrags = player.mineFrags.replace(rgx, "").trim();
+        const builds = player.builds.replace(rgx, "").trim();
+        const kills = Number(player.kills.replace(rgx, "").trim());
+        const deaths = Number(player.deaths.replace(rgx, "").trim());
+        const score = player.score.replace(rgx, "").trim();
         const eff =
           kills === 0 && deaths === 0
-            ? '0'
+            ? "0"
             : ((kills / (kills + deaths)) * 100).toFixed(0);
 
         template.print(
@@ -521,14 +526,14 @@ async function generateStats() {
       const fileName = `generated/siege-${Date.now()}.png`;
       template.write(fileName, async () => {
         const channel = client.channels.cache.get(process.env.STATS_CHANNEL);
-        await channel.send('', {
+        await channel.send("", {
           files: [fileName],
         });
         try {
           fs.unlinkSync(fileName);
           fs.unlinkSync(LOG_FILE);
         } catch (error) {
-          console.log('unlink error: ', error);
+          console.log("unlink error: ", error);
         }
       });
     });
