@@ -527,7 +527,7 @@ async function generateStats() {
       const fileName = `generated/siege-${Date.now()}.png`;
       template.write(fileName, async () => {
         const channel = client.channels.cache.get(process.env.STATS_CHANNEL);
-        await channel.send("", {
+        await channel.send({
           files: [fileName],
         });
         try {
