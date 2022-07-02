@@ -5,7 +5,7 @@ const Discord = require("discord.js");
 
 require("dotenv").config();
 
-const client = new Discord.Client({ intents: [] });
+const client = new Discord.Client({ intents: [ Discord.Intents.FLAGS.GUILDS ] });
 client.login(process.env.DISCORD_TOKEN);
 client.on("ready", () => {
   console.log(`Stats Bot started running at ${new Date().toUTCString()}`);
