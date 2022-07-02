@@ -2,9 +2,10 @@ const fs = require("fs");
 const Jimp = require("jimp");
 const FONTS = require("./fonts");
 const Discord = require("discord.js");
-const client = new Discord.Client();
+
 require("dotenv").config();
 
+const client = new Discord.Client({ intents: [] });
 client.login(process.env.DISCORD_TOKEN);
 client.on("ready", () => {
   console.log(`Stats Bot started running at ${new Date().toUTCString()}`);
