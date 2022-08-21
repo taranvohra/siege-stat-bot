@@ -13,8 +13,12 @@ client.login(process.env.DISCORD_TOKEN);
 client.on('ready', () => {
     console.log(`Stats Bot started running at ${new Date().toUTCString()}`);
 
-    setInterval(() => {
-        generateStats();
+    setInterval(async () => {
+        try {
+            await generateStats();
+        } catch (error) {
+            console.log('Could not generate stats: ', error);
+        }
     }, 10000);
 });
 
@@ -536,3 +540,11 @@ async function generateStats() {
         });
     }
 }
+
+process.on('unhandledRejection', (rejection) => {
+    throw rejection;
+});
+
+process.on('uncaughtException', (exception) => {
+    console.log('uncaughtException: ', exception);
+});
