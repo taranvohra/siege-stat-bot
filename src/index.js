@@ -1,6 +1,7 @@
 const fs = require('fs');
 const Discord = require('discord.js');
-const { generateSummaryScreenshot } = require('./generateSummaryScreenshot');
+const { generateSummaryScreenshot } = require('./screenshot');
+const { saveSummary } = require('./database');
 
 require('dotenv').config();
 
@@ -18,18 +19,20 @@ client.on('ready', () => {
             const response = await generateSummaryScreenshot();
             if (!response) return;
 
-            const { summaryScreenshot, SUMMARY_LOG_FILE } = response;
+            const { SUMMARY_LOG_FILE, summaryScreenshot, ...summary } = response;
 
-            const channel = client.channels.cache.get(process.env.STATS_CHANNEL);
+            const channel = client.channels.cache.get(process.env.SCREENSHOT_CHANNEL);
             const message = await channel.send({
                 files: [summaryScreenshot],
             });
 
             [summaryScreenshot, SUMMARY_LOG_FILE].forEach(fs.unlinkSync);
+
+            await saveSummary({ ...summary, screenshot: message.attachments.first().url });
         } catch (error) {
             console.log('Error: ', error);
         }
-    }, 10000);
+    }, 10_000);
 });
 
 process.on('unhandledRejection', (rejection) => {

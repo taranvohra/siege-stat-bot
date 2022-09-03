@@ -1,6 +1,7 @@
 const fs = require('fs');
 const Jimp = require('jimp');
 const FONTS = require('./fonts');
+const { getUTCDateString } = require('./utils');
 
 const RGX = /\x00/g;
 const SUMMARY_LOG_FILE = '../Pugs/siege_game_summary.log';
@@ -77,9 +78,10 @@ async function generateSummaryScreenshot() {
         const template = await Jimp.read(`assets/${gameMode}.png`);
 
         let y, nextY;
+        const now = new Date();
         const { cores, map, teams, timeLeft } = info;
         const timeLeftSeconds = Number(timeLeft.replace(RGX, '').trim());
-        const formattedTimeLeft = new Date(timeLeftSeconds * 1000).toISOString().substr(11, 8);
+        const formattedTimeLeft = new Date(timeLeftSeconds * 1000).toISOString().substring(11, 19);
         const redCoreHealth = Number(cores[0].replace(RGX, '').trim()).toFixed(0);
         const blueCoreHealth = Number(cores[1].replace(RGX, '').trim()).toFixed(0);
         const mapName = map.replace(RGX, '').trim().replace('CTF-', '');
@@ -134,7 +136,7 @@ async function generateSummaryScreenshot() {
             580,
             36,
             {
-                text: `${formattedTimeLeft}, on ${new Date().toDateString().slice(4)}`,
+                text: `${formattedTimeLeft}, on ${getUTCDateString(now)}`,
                 alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT,
                 alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE,
             },
@@ -508,8 +510,13 @@ async function generateSummaryScreenshot() {
         await template.writeAsync(summaryScreenshot);
 
         return {
-            SUMMARY_LOG_FILE,
+            date: now,
+            map: mapName,
+            type: gameMode,
+            cores: [redCoreHealth, blueCoreHealth].join(' - '),
+            timeLeft: formattedTimeLeft,
             summaryScreenshot,
+            SUMMARY_LOG_FILE,
         };
     }
 }
