@@ -3,8 +3,6 @@ const Discord = require('discord.js');
 const { generateSummaryScreenshot } = require('./screenshot');
 const { saveSummary } = require('./database');
 
-require('dotenv').config();
-
 const client = new Discord.Client({
     intents: [Discord.GatewayIntentBits.Guilds],
 });
