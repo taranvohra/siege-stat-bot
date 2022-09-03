@@ -103,7 +103,7 @@ async function generateSummaryScreenshot() {
             langarOrangeFNT,
         } = await FONTS;
 
-        if (redTeam.length === 0 || blueTeam.length === 0) return;
+        if (redTeam.length === 0 && blueTeam.length === 0) return;
 
         template.print(
             langarOrangeFNT,
